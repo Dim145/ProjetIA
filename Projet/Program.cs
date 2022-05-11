@@ -28,4 +28,48 @@ var tabValue = new int?[,]
 
 kakuro.Initialize(tabIndices, tabValue);
 
-Console.WriteLine(kakuro);
+var rand = new Random();
+
+var resolvedKakuro = Algo.Recuit(kakuro,
+    (kakuro1, f, arg3) =>
+    {
+        Console.WriteLine(kakuro1.NbIndiceInvalid());
+        return !kakuro1.Contains(0) && kakuro1.IsValid();
+    },
+    oldK =>
+    {
+        var newK = oldK.Clone() as Kakuro;
+
+        var rLig = rand.Next(0, newK.NbLig);
+        var rCol = rand.Next(0, newK.NbCol);
+
+        while (!newK.SetValue(rLig, rCol, rand.Next(1, 10)))
+        {
+            rLig = rand.Next(0, newK.NbLig);
+            rCol = rand.Next(0, newK.NbCol);
+        }
+
+        return newK;
+    },
+    kakuro1 => kakuro1.Count0Value(),
+    (i, f) =>
+    {
+        if (i > 0)
+        {
+            var A = (float) Math.Exp( -i/f );
+            if( rand.NextDouble() >= A ) 
+            {
+                return false;
+            }
+        }
+
+        return true;
+    },
+    decroissance: f =>
+    {
+        var value = (f - (f / (Algo.Tinit)) * 2);
+
+        return value <= 0.05f ? 0 : value;
+    });
+
+Console.WriteLine(resolvedKakuro);
