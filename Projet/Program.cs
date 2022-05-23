@@ -43,10 +43,29 @@ var resolvedKakuro = Algo.Recuit(kakuro,
         var rLig = rand.Next(0, newK.NbLig);
         var rCol = rand.Next(0, newK.NbCol);
 
-        while (!newK.SetValue(rLig, rCol, rand.Next(1, 10)))
+        while (newK.GetValue(rLig, rCol) is null)
         {
             rLig = rand.Next(0, newK.NbLig);
             rCol = rand.Next(0, newK.NbCol);
+        }
+
+        var indices = newK.GetIndiceOfValue(rLig, rCol);
+
+        var indice = indices[rand.Next(0, indices.Count)];
+        var tmp = indice.indice;
+        var isForLig = tmp.Contains(null) ? Array.FindIndex(tmp, i => i != null) == 1 : rand.Next(0, tmp.Length) == 1;
+        var indiceValue = tmp[isForLig ? 1 : 0];
+
+        var decompositions = Algo.Decompositions(indiceValue ?? 0,
+            newK.GetTabLengthForIndice(indice.lig, indice.col, isForLig) ?? 0 );
+
+        var decomposition = decompositions
+            .Where(vals => vals.All(i => i < 10))
+            .RandomElement();
+        
+        for (int i = 0; i < decomposition.Length; i++)
+        {
+            newK.SetValue(isForLig ? indice.lig : indice.lig + 1 + i, isForLig ? indice.col + 1 + i : indice.col, decomposition[i]);
         }
 
         return newK;

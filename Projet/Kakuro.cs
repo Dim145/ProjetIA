@@ -90,7 +90,7 @@ public class Kakuro: ICloneable
         return nbInvalid;
     }
     
-    private class GetIndiceStruct
+    public class GetIndiceStruct
     {
         public int lig {get; set;}
         public int col {get; set;}
@@ -109,7 +109,7 @@ public class Kakuro: ICloneable
         {
             var totalCol = 0;
 
-            for (int k = lig; k < NbLig; k++)
+            for (int k = lig+1; k < NbLig; k++)
             {
                 if(GetIndices(k, col) is not null)
                     break;
@@ -125,7 +125,7 @@ public class Kakuro: ICloneable
         {
             var totalLig = 0;
 
-            for (int k = col; k < NbCol; k++)
+            for (int k = col+1; k < NbCol; k++)
             {
                 if(GetIndices(lig, k) is not null)
                     break;
@@ -140,7 +140,7 @@ public class Kakuro: ICloneable
         return nb;
     }
 
-    private List<GetIndiceStruct> GetIndiceOfValue(int lig, int col)
+    public List<GetIndiceStruct> GetIndiceOfValue(int lig, int col)
     {
         var list = new List<GetIndiceStruct>();
         
@@ -166,6 +166,34 @@ public class Kakuro: ICloneable
         }
 
         return list;
+    }
+
+    public int? GetTabLengthForIndice(int lig, int col, bool isForLig)
+    {
+        var indice = GetIndices(lig, col);
+
+        if (indice == null)
+            return null;
+
+        int nb = 0;
+
+        do
+        {
+            lig = isForLig ? lig : lig + 1;
+            col = isForLig ? col + 1 : col;
+            
+            if(lig >= NbLig || col >= NbCol)
+                break;
+            
+            var value = GetValue(lig, col);
+
+            if (value != null)
+                nb++;
+            else
+                break;
+        } while (true);
+
+        return nb;
     }
 
     public override string ToString()

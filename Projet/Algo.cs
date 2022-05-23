@@ -33,65 +33,48 @@ public static class Algo
 
     private static Random random { get; } = new();
 
-    public static int[]? Decomposition(int numberToDecompose, int numberOfSubSection, int minRandom = 0)
+    public static List<int[]> Decompositions(int target, int nbSegments)
     {
-        var tab = new int[numberOfSubSection];
-        var cumulative_sum_of_random_numbers = 0;
-        var current_subsection = 1;
-        var max_random_number = numberToDecompose / numberOfSubSection;
+        var list = new List<int[]>();
+        
+        Generate(target, 0, 0, 0, new int[nbSegments], list);
 
-        if (minRandom > max_random_number)
-        {
-            Console.Error.WriteLine("ERROR: Cannot have min number as {0:D2} and split {1:D2} in {2:D2} subsections", minRandom, numberToDecompose, numberOfSubSection);
-            return null;
-        }
-
-        while (true)
-        {
-            var random_number = random.Next(minRandom, max_random_number);
-            tab[current_subsection] = random_number;
-            cumulative_sum_of_random_numbers += random_number;
-            numberToDecompose -= random_number;
-
-            current_subsection++;
-
-            if (current_subsection == numberOfSubSection)
-            {
-                random_number = numberToDecompose;
-                tab[0] = random_number;
-
-                cumulative_sum_of_random_numbers += random_number;
-                break;
-            }
-        }
-
-        return tab;
+        return list;
     }
     
-    /*
-     * def split_given_number_into_n_random_numbers(number, number_of_subsections, min_random_number_desired = 0):
-    cumulative_sum_of_random_numbers = 0
-    current_subsection = 1
-    max_random_number = int(number/number_of_subsections)
-    if min_random_number_desired > max_random_number:
-        print("ERROR: Cannot have min number as {} and split {} in {} subsections".format(min_random_number_desired,
-                                                                                          number, number_of_subsections))
-        return False
+    private static void Generate(int target, int k, int last, int sum, int[] a, List<int[]> ints)
+    {
 
-    while (True):
-        random_number = random.randint(min_random_number_desired, max_random_number)
-        print("Random number {} = {}".format(current_subsection, random_number))
-        cumulative_sum_of_random_numbers += random_number
-        # print("Cumulative sum {}".format(sum_of_num))
-        number -= random_number
-        current_subsection += 1
-        if current_subsection == number_of_subsections:
-            random_number = number
-            print("Random number {} = {}".format(current_subsection, random_number))
-            cumulative_sum_of_random_numbers += random_number
-            break
+        if (k == a.Length- 1)
+        {
 
-    print("Final cumulative sum of random numbers = {}".format(cumulative_sum_of_random_numbers))
-    return True
-     */
+            a[k] = target - sum;
+            ints.Add(a.ToArray());
+
+        }
+        else
+        {
+
+            for (int i = last; i < target - sum - i + 1; i++)
+            {
+
+                a[k] = i;
+                Generate(target, k + 1, i, sum + i, a, ints);
+
+            }
+
+        }
+
+    }
+    
+    public static T RandomElement<T>(this IEnumerable<T> enumerable)
+    {
+        return enumerable.RandomElementUsing(new Random());
+    }
+
+    public static T RandomElementUsing<T>(this IEnumerable<T> enumerable, Random rand)
+    {
+        int index = rand.Next(0, enumerable.Count());
+        return enumerable.ElementAt(index);
+    }
 }
