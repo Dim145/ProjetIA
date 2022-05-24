@@ -131,6 +131,67 @@ public static class Algo
         return res;
     }
     
+    [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH", MessageId = "type: System.SZGenericArrayEnumerator`1[System.Int32]")]
+    public static int[] DecompositionPlusMoinsRandom(int num, int subNum, Dictionary<int, int> staticValues)
+    {
+        if (subNum == 1)
+            return new[]{num};
+
+        int startNum = num;
+        int startSubNum = subNum;
+        bool isGood = false;
+
+        var res = new int[subNum];
+
+        int nbTentative = 0;
+        while (!isGood)
+        {
+            num = startNum;
+            subNum = startSubNum;
+            res = new int[subNum];
+
+            int cumulSum = 0;
+            int subSection = 0;
+
+            int max_random_number = Math.Min(9, startNum);
+            
+            while (true)
+            {
+                int random_number = nbTentative++ <= 150*startSubNum && staticValues.ContainsKey(subSection) ? staticValues[subSection] : random.Next(1, max_random_number + 1);
+
+                res[subSection] = random_number;
+                cumulSum += random_number;
+                num -= random_number;
+                subSection++;
+
+                if (cumulSum >= startNum)
+                {
+                    if (cumulSum > startNum)
+                        res[subSection-1] = cumulSum - startNum - (res.Length - subSection);
+
+                    for (int i = subSection; i < res.Length; i++)
+                        res[i] = 1;
+                    
+                    break;
+                }
+
+                if (subSection == subNum - 1)
+                {
+                    random_number = nbTentative <= 150*startSubNum && staticValues.ContainsKey(subSection) ? staticValues[subSection] : num;
+                    res[subSection] = random_number;
+                    cumulSum += random_number;
+                    break;
+                }
+            }
+
+            isGood = res.Sum() == startNum && res.All(i => i is > 0 and < 10);
+        }
+
+        random.Shuffle(res);
+
+        return res;
+    }
+    
     public static T RandomElement<T>(this IEnumerable<T> enumerable)
     {
         return enumerable.RandomElementUsing(new Random());
