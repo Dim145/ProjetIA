@@ -1,8 +1,6 @@
 ﻿using Projet;
 
-var kakuro = new Kakuro(8, 8);
-
-var tabIndices = new[,]
+/*var tabIndices = new[,]
 {
     {null, new int?[]{23, null}, new int?[]{30, null}, null, null, new int?[]{27, null}, new int?[]{12, null}, new int?[]{16, null} },
     {new int?[]{null, 16}, null, null, null, new int?[]{17, 24}, null, null, null },
@@ -24,16 +22,39 @@ var tabValue = new int?[,]
     {null, null, null, 0, 0, 0, 0, 0},
     {null, 0, 0, 0, 0, null, 0, 0},
     {null, 0, 0, 0, null, null, 0, 0}
+};*/
+
+var tabIndices = new[,]
+{
+    {null, new int?[]{4, null}, new int?[]{9, null}, null, null, null},
+    {new int?[]{null, 4}, null, null, new int?[]{24, null}, null, null},
+    {new int?[]{null, 17}, null, null, null, new int?[]{17, null}, null},
+    {null, new int?[]{null, 18}, null, null, null, null},
+    {null, null, new int?[]{null, 16}, null, null, null},
+    {null, null, null, null, null, null}
 };
 
+var tabValue = new int?[,]
+{
+    {null, null, null, null, null, null},
+    {null, 0, 0, null, null, null},
+    {null, 0, 0, 0, null, null},
+    {null, null, 0, 0, 0, null},
+    {null, null, null, 0, 0, null},
+    {null, null, null, null, null, null}
+};
+
+var kakuro = new Kakuro(tabIndices.GetLength(0), tabIndices.GetLength(1));
+
 kakuro.Initialize(tabIndices, tabValue);
+
+Console.WriteLine(kakuro);
 
 var rand = new Random();
 
 var resolvedKakuro = Algo.Recuit(kakuro,
     (kakuro1, f, arg3) =>
     {
-        Console.WriteLine(kakuro1.NbIndiceInvalid());
         return !kakuro1.Contains(0) && kakuro1.IsValid();
     },
     oldK =>
@@ -51,22 +72,25 @@ var resolvedKakuro = Algo.Recuit(kakuro,
 
         var indices = newK.GetIndiceOfValue(rLig, rCol);
 
-        var indice = indices[rand.Next(0, indices.Count)];
-        var tmp = indice.indice;
-        var isForLig = tmp.Contains(null) ? Array.FindIndex(tmp, i => i != null) == 1 : rand.Next(0, tmp.Length) == 1;
-        var indiceValue = tmp[isForLig ? 1 : 0];
-
-        var decompositions = Algo.Decompositions(indiceValue ?? 0,
-            newK.GetTabLengthForIndice(indice.lig, indice.col, isForLig) ?? 0 );
-
-        var decomposition = decompositions
-            .Where(vals => vals.All(i => i < 10))
-            .RandomElement();
-        
-        for (int i = 0; i < decomposition.Length; i++)
+        do
         {
-            newK.SetValue(isForLig ? indice.lig : indice.lig + 1 + i, isForLig ? indice.col + 1 + i : indice.col, decomposition[i]);
-        }
+            var decompositionCol = Algo.DecompositionPlusRandom(indices[0].indice[0]!.Value, newK.GetTabLengthForIndice(indices[0].lig, indices[0].col, false)!.Value);
+            var decompositionLig = Algo.DecompositionPlusRandom(indices[1].indice[1]!.Value, newK.GetTabLengthForIndice(indices[1].lig, indices[1].col, true)!.Value);
+
+            var numLigLock = rLig - indices[0].lig - 1;
+            var numColLock = rCol - indices[1].col - 1;
+
+            if (decompositionCol[numLigLock] == decompositionLig[numColLock])
+            {
+                for (int i = 0; i < decompositionLig.Length; i++)
+                    newK.SetValue(indices[1].lig, indices[1].col + 1 + i, decompositionLig[i]);
+                
+                for (int i = 0; i < decompositionCol.Length; i++)
+                    newK.SetValue(indices[0].lig + 1 + i, indices[0].col, decompositionCol[i]);
+                
+                break;
+            }
+        } while (true);
 
         return newK;
     },

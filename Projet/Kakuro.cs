@@ -1,4 +1,6 @@
-﻿namespace Projet;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Projet;
 
 public class Kakuro: ICloneable
 {
@@ -220,11 +222,13 @@ public class Kakuro: ICloneable
         return sRet;
     }
 
+    [SuppressMessage("ReSharper.DPA", "DPA0001: Memory allocation issues")]
     public int Count0Value()
     {
         return TabValues.Cast<int?>().Count(v => v == 0);
     }
 
+    [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH", MessageId = "type: System.Nullable`1[System.Int32][][,]")]
     public object Clone()
     {
         var newK = new Kakuro(NbLig, NbCol);
