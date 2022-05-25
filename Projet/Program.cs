@@ -1,6 +1,6 @@
 ﻿using Projet;
 
-/*var tabIndices = new[,]
+var tabIndices = new[,]
 {
     {null, new int?[]{23, null}, new int?[]{30, null}, null, null, new int?[]{27, null}, new int?[]{12, null}, new int?[]{16, null} },
     {new int?[]{null, 16}, null, null, null, new int?[]{17, 24}, null, null, null },
@@ -22,9 +22,9 @@ var tabValue = new int?[,]
     {null, null, null, 0, 0, 0, 0, 0},
     {null, 0, 0, 0, 0, null, 0, 0},
     {null, 0, 0, 0, null, null, 0, 0}
-};*/
+};
 
-var tabIndices = new[,]
+/*var tabIndices = new[,]
 {
     {null, new int?[]{4, null}, new int?[]{9, null}, null, null, null},
     {new int?[]{null, 3}, null, null, new int?[]{24, null}, null, null},
@@ -42,7 +42,7 @@ var tabValue = new int?[,]
     {null, null, 0, 0, 0, null},
     {null, null, null, 0, 0, null},
     {null, null, null, null, null, null}
-};
+};*/
 
 var kakuro = new Kakuro(tabIndices.GetLength(0), tabIndices.GetLength(1));
 
@@ -66,10 +66,13 @@ var resolvedKakuro = Algo.Recuit(kakuro,
         var rLig = rand.Next(0, newK.NbLig);
         var rCol = rand.Next(0, newK.NbCol);
 
-        while (newK.GetValue(rLig, rCol) is null)
+        var tmpValue = newK.GetValue(rLig, rCol);
+        while ( tmpValue is null || newK.Count0Value() > 0 && tmpValue != 0 )
         {
             rLig = rand.Next(0, newK.NbLig);
             rCol = rand.Next(0, newK.NbCol);
+            
+            tmpValue = newK.GetValue(rLig, rCol);
         }
 
         var indices = newK.GetIndiceOfValue(rLig, rCol);
@@ -96,10 +99,9 @@ var resolvedKakuro = Algo.Recuit(kakuro,
 
                 var tmp = new Dictionary<int, int>();
                 tmp.Add(numLigLock, decompositionLig[i]);
-                decompositionCol = Algo.DecompositionPlusMoinsRandom(
+                decompositionCol = Algo.DecompositionPlusRandom(
                     indiceCol.indice[0]!.Value, 
-                    newK.GetTabLengthForIndice(indiceCol.lig, indiceCol.col, false)!.Value,
-                    tmp
+                    newK.GetTabLengthForIndice(indiceCol.lig, indiceCol.col, false)!.Value
                     );
 
                 if (decompositionCol[numLigLock] == decompositionLig[i])
@@ -121,7 +123,7 @@ var resolvedKakuro = Algo.Recuit(kakuro,
 
         return newK;
     },
-    kakuro1 => kakuro1.Count0Value(),
+    kakuro1 => kakuro1.Count0Value() + kakuro1.NbIndiceInvalid(),
     (i, f) =>
     {
         if (i > 0)
