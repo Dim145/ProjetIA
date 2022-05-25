@@ -74,10 +74,10 @@ public class Kakuro: ICloneable
     public bool IsValid()
     {
         //todo: condition de victoire.
-        return NbIndiceInvalid() == 0;
+        return ValuesOfInvalidIndices() == 0;
     }
 
-    public int NbIndiceInvalid()
+    public int ValuesOfInvalidIndices()
     {
         int nbInvalid = 0;
         
@@ -111,32 +111,40 @@ public class Kakuro: ICloneable
         {
             var totalCol = 0;
 
+            int max = 1;
             for (int k = lig+1; k < NbLig; k++)
             {
                 if(GetIndices(k, col) is not null)
                     break;
 
+                if (k < max)
+                    max = k;
+
                 totalCol += GetValue(k, col) ?? 0;
             }
 
             if (totalCol != indice[0])
-                nb++;
+                nb += max;
         }
 
         if (indice[1] is not null)
         {
             var totalLig = 0;
 
+            int max = 1;
             for (int k = col+1; k < NbCol; k++)
             {
                 if(GetIndices(lig, k) is not null)
                     break;
 
+                if (k < max)
+                    max = k;
+
                 totalLig += GetValue(lig, k) ?? 0;
             }
 
             if (totalLig != indice[1])
-                nb++;
+                nb += max;
         }
 
         return nb;

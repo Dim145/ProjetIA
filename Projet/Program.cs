@@ -87,43 +87,28 @@ var resolvedKakuro = Algo.Recuit(kakuro,
 
         for (int i = 0; i < decompositionLig.Length; i++)
         {
-            var decompositionCol = Array.Empty<int>();
+            int[] decompositionCol;
 
-            var nbTentative = 0;
-            do
+            var numLigLock = rLig - indiceCol.lig - 1;
+
+            decompositionCol = Algo.DecompositionPlusRandom(
+                indiceCol.indice[0]!.Value, 
+                newK.GetTabLengthForIndice(indiceCol.lig, indiceCol.col, false)!.Value
+            );
+
+            if (decompositionCol[numLigLock] == decompositionLig[i])
             {
-                if (nbTentative++ > 100)
-                    return newK;
-                
-                var numLigLock = rLig - indiceCol.lig - 1;
+                for (int j = 0; j < decompositionCol.Length; j++)
+                    newK.SetValue(indiceCol.lig + 1 + j, indiceCol.col, decompositionCol[j]);
+            }
 
-                var tmp = new Dictionary<int, int>();
-                tmp.Add(numLigLock, decompositionLig[i]);
-                decompositionCol = Algo.DecompositionPlusRandom(
-                    indiceCol.indice[0]!.Value, 
-                    newK.GetTabLengthForIndice(indiceCol.lig, indiceCol.col, false)!.Value
-                    );
-
-                if (decompositionCol[numLigLock] == decompositionLig[i])
-                {
-                    for (int j = 0; j < decompositionCol.Length; j++)
-                        newK.SetValue(indiceCol.lig + 1 + j, indiceCol.col, decompositionCol[j]);
-
-                    if (indiceCol.col + 1 < newK.NbCol && newK.GetValue(rLig, indiceCol.col + 1) != null)
-                    {
-                        indiceCol = newK.GetIndiceOfValue(rLig, indiceCol.col + 1 + i)[0];
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            } while (true);
+            if (indiceCol.col + 1 < newK.NbCol && newK.GetValue(rLig, indiceCol.col + 1) != null)
+                indiceCol = newK.GetIndiceOfValue(rLig, indiceCol.col + 1)[0];
         }
 
         return newK;
     },
-    kakuro1 => kakuro1.Count0Value() + kakuro1.NbIndiceInvalid(),
+    kakuro1 => kakuro1.Count0Value() + kakuro1.ValuesOfInvalidIndices(),
     (i, f) =>
     {
         if (i > 0)
