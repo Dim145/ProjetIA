@@ -4,12 +4,20 @@ namespace Projet;
 
 public class Kakuro: ICloneable
 {
-    private int?[,] TabValues { get; }
+    private int?[,] TabValues { get; set; }
     private int?[,][] TabIndices { get; }
     
     public int NbCol { get; }
     public int NbLig { get; }
 
+    public Kakuro(int?[,][]? tabIndices)
+    {
+        NbLig = tabIndices.GetLength(0);
+        NbCol = tabIndices.GetLength(1);
+
+        TabIndices = tabIndices;
+    }
+    
     public Kakuro(int nbLig, int nbCol)
     {
         TabIndices = new int?[nbLig, nbCol][];
@@ -239,9 +247,10 @@ public class Kakuro: ICloneable
     [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH", MessageId = "type: System.Nullable`1[System.Int32][][,]")]
     public object Clone()
     {
-        var newK = new Kakuro(NbLig, NbCol);
-        
-        newK.Initialize(TabIndices, TabValues);
+        var newK = new Kakuro(TabIndices)
+        {
+            TabValues = (TabValues.Clone() as int?[,])!
+        };
 
         return newK;
     }

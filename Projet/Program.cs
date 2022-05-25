@@ -1,48 +1,145 @@
 ﻿using Projet;
 
-var tabIndices = new[,]
+var exemples = new object[]
 {
-    {null, new int?[]{23, null}, new int?[]{30, null}, null, null, new int?[]{27, null}, new int?[]{12, null}, new int?[]{16, null} },
-    {new int?[]{null, 16}, null, null, null, new int?[]{17, 24}, null, null, null },
-    {new int?[]{null, 17}, null, null, new int?[]{15, 29}, null, null, null, null },
-    {new int?[]{null, 35}, null, null, null, null, null, new int?[]{12, null}, null },
-    {null, new int?[]{null, 7}, null, null, new int?[]{7, 8}, null, null, new int?[]{7, null} },
-    {null, new int?[]{11, null}, new int?[]{10, 16}, null, null, null, null, null },
-    {new int?[]{null, 21}, null, null, null, null, new int?[]{null, 5}, null, null },
-    {new int?[]{null, 6}, null, null, null, null, new int?[]{null, 3}, null, null }
+    new object[]
+    {
+        "6x6: Cas très simple (starter venant du site)",
+        new[,]
+        {
+            {null, new int?[]{4, null}, new int?[]{9, null}, null, null, null},
+            {new int?[]{null, 3}, null, null, new int?[]{24, null}, null, null},
+            {new int?[]{null, 17}, null, null, null, new int?[]{17, null}, null},
+            {null, new int?[]{null, 18}, null, null, null, null},
+            {null, null, new int?[]{null, 16}, null, null, null},
+            {null, null, null, null, null, null}
+        },
+        new int?[,]
+        {
+            {null, null, null, null, null, null},
+            {null, 0, 0, null, null, null},
+            {null, 0, 0, 0, null, null},
+            {null, null, 0, 0, 0, null},
+            {null, null, null, 0, 0, null},
+            {null, null, null, null, null, null}
+        }
+    },
+    new object[]{
+        "8x8: exemple du sujet (= wiki)",
+        new[,]{
+        {null, new int?[]{23, null}, new int?[]{30, null}, null, null, new int?[]{27, null}, new int?[]{12, null}, new int?[]{16, null} },
+        {new int?[]{null, 16}, null, null, null, new int?[]{17, 24}, null, null, null },
+        {new int?[]{null, 17}, null, null, new int?[]{15, 29}, null, null, null, null },
+        {new int?[]{null, 35}, null, null, null, null, null, new int?[]{12, null}, null },
+        {null, new int?[]{null, 7}, null, null, new int?[]{7, 8}, null, null, new int?[]{7, null} },
+        {null, new int?[]{11, null}, new int?[]{10, 16}, null, null, null, null, null },
+        {new int?[]{null, 21}, null, null, null, null, new int?[]{null, 5}, null, null },
+        {new int?[]{null, 6}, null, null, null, null, new int?[]{null, 3}, null, null }
+    },
+        new int?[,]{
+            {null, null, null, null, null, null, null, null},
+            {null, 0, 0, null, null, 0, 0, 0},
+            {null, 0, 0, null, 0, 0, 0, 0},
+            {null, 0, 0, 0, 0, 0, null, null},
+            {null, null, 0, 0, null, 0, 0, null},
+            {null, null, null, 0, 0, 0, 0, 0},
+            {null, 0, 0, 0, 0, null, 0, 0},
+            {null, 0, 0, 0, null, null, 0, 0}
+        }
+    },
+    new object[]
+    {
+        "10x10: niveau médium du site",
+        new[,]
+        {
+            {null, null, new int?[]{31, null}, new int?[]{17, null}, new int?[]{6, null}, new int?[]{18, null}, null, new int?[]{21, null}, new int?[]{15, null}, null},
+            {null, new int?[]{22, 18}, null, null, null, null, new int?[]{null, 9}, null, null, new int?[]{3, null}},
+            {new int?[]{null, 35}, null, null, null, null, null, new int?[]{17, 19}, null, null, null},
+            {new int?[]{null, 8}, null, null, new int?[]{4, null}, new int?[]{null, 17}, null, null, null, null, null},
+            {new int?[]{null, 18}, null, null, null, new int?[]{16, 13}, null, null, new int?[]{14, null}, new int?[]{18, null}, null},
+            {null, new int?[]{null, 18}, null, null, null, new int?[]{12, 12}, null, null, null, new int?[]{6, null}},
+            {null, new int?[]{17, null}, new int?[]{12, null}, new int?[]{19, 6}, null, null, new int?[]{null, 19}, null, null, null},
+            {new int?[]{null, 19}, null, null, null, null, null, new int?[]{13, null}, new int?[]{14, 3}, null, null},
+            {new int?[]{null, 21}, null, null, null, new int?[]{null, 18}, null, null, null, null, null},
+            {null, new int?[]{null, 16}, null, null, new int?[]{null, 26}, null, null, null, null, null}
+        },
+        new int?[,]
+        {
+            {null, null, null, null, null, null, null, null, null, null},
+            {null, null, 0, 0, 0, 0, null, 0, 0, null},
+            {null, 0, 0, 0, 0, 0, null, 0, 0, 0},
+            {null, 0, 0, null, null, 0, 0, 0, 0, 0},
+            {null, 0, 0, 0, null, 0, 0, null, null, null},
+            {null, null, 0, 0, 0, null, 0, 0, 0, null},
+            {null, null, null, null, 0, 0, null, 0, 0, 0},
+            {null, 0, 0, 0, 0, 0, null, null, 0, 0},
+            {null, 0, 0, 0, null, 0, 0, 0, 0, 0},
+            {null, null, 0, 0, null, 0, 0, 0, 0, null}
+        }
+    },
+    new object[]
+    {
+        "14x14: niveau hard du site", // #H13162
+        new[,]
+        {
+            {null, new int?[]{7, null}, new int?[]{37, null}, new int?[]{11, null}, new int?[]{44, null}, new int?[]{17, null}, new int?[]{17, null}, null, new int?[]{19, null}, new int?[]{11, null}, new int?[]{11, null}, null, new int?[]{29, null}, new int?[]{11, null}},
+            {new int?[]{null, 39}, null, null, null, null, null, null, new int?[]{null, 20}, null, null, null, new int?[]{16, 17}, null, null},
+            {new int?[]{null, 32}, null, null, null, null, null, null, new int?[]{45, 21}, null, null, null, null, null, null},
+            {new int?[]{null, 11}, null, null, null, null, new int?[]{9, 10}, null, null, null, new int?[]{23, 6}, null, null, null, new int?[]{9, null}},
+            {null, new int?[]{14, 25}, null, null, null, null, null, null, new int?[]{21, 30}, null, null, null, null, null},
+            {new int?[]{null, 13}, null, null, new int?[]{15, 30}, null, null, null, null, null, null, new int?[]{42, null}, new int?[]{14, 15}, null, null},
+            {new int?[]{null, 15}, null, null, null, null, null, new int?[]{16, 16}, null, null, null, null, null, new int?[]{29, null}, null},
+            {null, new int?[]{null, 22}, null, null, null, new int?[]{20, 24}, null, null, null, new int?[]{7, 6}, null, null, null, new int?[]{4, null}},
+            {null, new int?[]{5, null}, new int?[]{34, 32}, null, null, null, null, null, new int?[]{35, 26}, null, null, null, null, null},
+            {new int?[]{null, 10}, null, null, new int?[]{10, null}, new int?[]{17, 22}, null, null, null, null, null, null, new int?[]{26, 9}, null, null},
+            {new int?[]{null, 31}, null, null, null, null, null, new int?[]{10, 39}, null, null, null, null, null, null, new int?[]{11, null}},
+            {null, new int?[]{9, 8}, null, null, null, new int?[]{14, 8}, null, null, null, new int?[]{6, 29}, null, null, null, null},
+            {new int?[]{null, 21}, null, null, null, null, null, null, new int?[]{null, 21}, null, null, null, null, null, null},
+            {new int?[]{null, 16}, null, null, new int?[]{null, 20}, null, null, null, new int?[]{null, 31}, null, null, null, null, null, null}
+        },
+        new int?[,]
+        {
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, null, 0, 0},
+            {null, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0, 0},
+            {null, 0, 0, 0, 0, null, 0, 0, 0, null, 0, 0, 0, null},
+            {null, null, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0},
+            {null, 0, 0, null, 0, 0, 0, 0, 0, 0, null, null, 0, 0},
+            {null, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0, null, null},
+            {null, null, 0, 0, 0, null, 0, 0, 0, null, 0, 0, 0, null},
+            {null, null, null, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0},
+            {null, 0, 0, null, null, 0, 0, 0, 0, 0, 0, null, 0, 0},
+            {null, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0, 0, null},
+            {null, null, 0, 0, 0, null, 0, 0, 0, null, 0, 0, 0, 0},
+            {null, 0, 0, 0, 0, 0, 0, null, 0, 0, 0, 0, 0, 0},
+            {null, 0, 0, null, 0, 0, 0, null, 0, 0, 0, 0, 0, 0}
+        }
+    }
 };
 
-var tabValue = new int?[,]
+var index = -1;
+do
 {
-    {null, null, null, null, null, null, null, null},
-    {null, 0, 0, null, null, 0, 0, 0},
-    {null, 0, 0, null, 0, 0, 0, 0},
-    {null, 0, 0, 0, 0, 0, null, null},
-    {null, null, 0, 0, null, 0, 0, null},
-    {null, null, null, 0, 0, 0, 0, 0},
-    {null, 0, 0, 0, 0, null, 0, 0},
-    {null, 0, 0, 0, null, null, 0, 0}
-};
+    Console.WriteLine("Veuillez séléctionnez un cas parmis les suivants:");
+    for (int i = 0; i < exemples.Length; i++)
+    {
+        var tabExemple = exemples[i] as object[];
+        Console.WriteLine($"{i} = {tabExemple[0]}");
+    }
 
-/*var tabIndices = new[,]
-{
-    {null, new int?[]{4, null}, new int?[]{9, null}, null, null, null},
-    {new int?[]{null, 3}, null, null, new int?[]{24, null}, null, null},
-    {new int?[]{null, 17}, null, null, null, new int?[]{17, null}, null},
-    {null, new int?[]{null, 18}, null, null, null, null},
-    {null, null, new int?[]{null, 16}, null, null, null},
-    {null, null, null, null, null, null}
-};
+    Console.Write("exemple séléctionné: ");
+    try
+    {
+        index = int.Parse(Console.ReadLine());
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine("Valeur invalide, recommencez\n");
+    }
+} while (index < 0 || index >= exemples.Length);
 
-var tabValue = new int?[,]
-{
-    {null, null, null, null, null, null},
-    {null, 0, 0, null, null, null},
-    {null, 0, 0, 0, null, null},
-    {null, null, 0, 0, 0, null},
-    {null, null, null, 0, 0, null},
-    {null, null, null, null, null, null}
-};*/
+var tabIndices = (exemples[index] as object[])[1] as int?[]?[,];
+var tabValue = (exemples[index] as object[])[2] as int?[,];
 
 var kakuro = new Kakuro(tabIndices.GetLength(0), tabIndices.GetLength(1));
 
@@ -54,80 +151,7 @@ var rand = new Random();
 
 var start = DateTime.Now;
 
-var resolvedKakuro = Algo.Recuit(kakuro,
-    (kakuro1, f, arg3) =>
-    {
-        return !kakuro1.Contains(0) && kakuro1.IsValid();
-    },
-    oldK =>
-    {
-        var newK = oldK.Clone() as Kakuro;
-
-        var rLig = rand.Next(0, newK.NbLig);
-        var rCol = rand.Next(0, newK.NbCol);
-
-        var tmpValue = newK.GetValue(rLig, rCol);
-        while ( tmpValue is null || newK.Count0Value() > 0 && tmpValue != 0 )
-        {
-            rLig = rand.Next(0, newK.NbLig);
-            rCol = rand.Next(0, newK.NbCol);
-            
-            tmpValue = newK.GetValue(rLig, rCol);
-        }
-
-        var indices = newK.GetIndiceOfValue(rLig, rCol);
-        var indiceLig = indices[1];
-        
-        var decompositionLig = Algo.DecompositionPlusRandom(indiceLig.indice[1]!.Value, newK.GetTabLengthForIndice(indiceLig.lig, indiceLig.col, true)!.Value);
-
-        for (int i = 0; i < decompositionLig.Length; i++)
-            newK.SetValue(indiceLig.lig, indiceLig.col + 1 + i, decompositionLig[i]);
-
-        var indiceCol = newK.GetIndiceOfValue(rLig, rCol - (rCol - indices[0].col))[0];
-
-        for (int i = 0; i < decompositionLig.Length; i++)
-        {
-            int[] decompositionCol;
-
-            var numLigLock = rLig - indiceCol.lig - 1;
-
-            decompositionCol = Algo.DecompositionPlusRandom(
-                indiceCol.indice[0]!.Value, 
-                newK.GetTabLengthForIndice(indiceCol.lig, indiceCol.col, false)!.Value
-            );
-
-            if (decompositionCol[numLigLock] == decompositionLig[i])
-            {
-                for (int j = 0; j < decompositionCol.Length; j++)
-                    newK.SetValue(indiceCol.lig + 1 + j, indiceCol.col, decompositionCol[j]);
-            }
-
-            if (indiceCol.col + 1 < newK.NbCol && newK.GetValue(rLig, indiceCol.col + 1) != null)
-                indiceCol = newK.GetIndiceOfValue(rLig, indiceCol.col + 1)[0];
-        }
-
-        return newK;
-    },
-    kakuro1 => kakuro1.Count0Value() + kakuro1.ValuesOfInvalidIndices(),
-    (i, f) =>
-    {
-        if (i > 0)
-        {
-            var A = (float) Math.Exp( -i/f );
-            if( rand.NextDouble() >= A ) 
-            {
-                return false;
-            }
-        }
-
-        return true;
-    },
-    decroissance: f =>
-    {
-        var value = (f - (f / (Algo.Tinit)) * 2);
-
-        return value <= 0.05f ? 0 : value;
-    });
+var resolvedKakuro = Algo.RecuitKakuro(kakuro);
 
 var end = DateTime.Now;
 
