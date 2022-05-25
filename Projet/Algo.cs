@@ -31,7 +31,7 @@ public static class Algo
         return x;
     }
 
-    private static Random random { get; } = new();
+    private static Random random { get; set; } = new();
 
     [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH", MessageId = "type: System.SZGenericArrayEnumerator`1[System.Int32]")]
     public static int[] DecompositionPlusRandom(int num, int subNum)
@@ -104,16 +104,17 @@ public static class Algo
         }
     }
 
+    [SuppressMessage("ReSharper.DPA", "DPA0001: Memory allocation issues")]
     public static Kakuro RecuitKakuro(Kakuro kakuro)
     {
         return Recuit(kakuro,
-    (kakuro1, f, arg3) =>
+  (kakuro1, f, arg3) =>
             {
                 return !kakuro1.Contains(0) && kakuro1.IsValid();
             },
             oldK =>
             {
-                var newK = oldK.Clone() as Kakuro;
+                var newK = (oldK.Clone() as Kakuro)!;
 
                 var rLig = random.Next(0, newK.NbLig);
                 var rCol = random.Next(0, newK.NbCol);
@@ -130,7 +131,7 @@ public static class Algo
                 var indices = newK.GetIndiceOfValue(rLig, rCol);
                 var indiceLig = indices[1];
                 
-                var decompositionLig = DecompositionPlusRandom(indiceLig.indice[1]!.Value, newK.GetTabLengthForIndice(indiceLig.lig, indiceLig.col, true)!.Value);
+                var decompositionLig = DecompositionPlusRandom(indiceLig.indice![1]!.Value, newK.GetTabLengthForIndice(indiceLig.lig, indiceLig.col, true)!.Value);
 
                 for (int i = 0; i < decompositionLig.Length; i++)
                     newK.SetValue(indiceLig.lig, indiceLig.col + 1 + i, decompositionLig[i]);
@@ -144,7 +145,7 @@ public static class Algo
                     var numLigLock = rLig - indiceCol.lig - 1;
 
                     decompositionCol = Algo.DecompositionPlusRandom(
-                        indiceCol.indice[0]!.Value, 
+                        indiceCol.indice![0]!.Value, 
                         newK.GetTabLengthForIndice(indiceCol.lig, indiceCol.col, false)!.Value
                     );
 
@@ -161,12 +162,12 @@ public static class Algo
                 return newK;
             },
             kakuro1 => kakuro1.Count0Value() + kakuro1.ValuesOfInvalidIndices(),
-            (i, f) =>
+            (diff, f) =>
             {
-                if (i > 0)
+                if (diff > 0)
                 {
-                    var A = (float) Math.Exp( -i/f );
-                    if( random.NextDouble() >= A ) 
+                    var a = (float) Math.Exp( -diff/f );
+                    if( random.NextDouble() >= a ) 
                     {
                         return false;
                     }
@@ -176,9 +177,9 @@ public static class Algo
             },
             decroissance: f =>
             {
-                var value = (f - (f / (Tinit)) * 2);
+                var value = f - (f / Tinit) * 2;
 
-                return value <= 0.05f ? 0 : value;
+                return value <= 0.0005f ? 0 : value;
             });
     }
 }

@@ -4,7 +4,7 @@ namespace Projet;
 
 public class Kakuro: ICloneable
 {
-    private int?[,] TabValues { get; set; }
+    private int?[,]? TabValues { get; set; }
     private int?[,][] TabIndices { get; }
     
     public int NbCol { get; }
@@ -12,7 +12,7 @@ public class Kakuro: ICloneable
 
     public Kakuro(int?[,][]? tabIndices)
     {
-        NbLig = tabIndices.GetLength(0);
+        NbLig = tabIndices!.GetLength(0);
         NbCol = tabIndices.GetLength(1);
 
         TabIndices = tabIndices;
@@ -38,7 +38,7 @@ public class Kakuro: ICloneable
         {
             for (int j = 0; j < NbCol; j++)
             {
-                if (tabIndices[i, j] == null)
+                if (tabIndices?[i, j] == null)
                     TabValues[i, j] = tabValues[i, j];
                 else
                     TabIndices[i, j] = tabIndices[i, j];
@@ -51,17 +51,17 @@ public class Kakuro: ICloneable
         if (value is 0 || GetValue(lig, col) is null)
             return false;
 
-        if (GetIndiceOfValue(lig, col).All(i => IsValidIndice(i.lig, i.col) == 0))
-            return false;
+        /*if (GetIndiceOfValue(lig, col).All(i => IsValidIndice(i.lig, i.col) == 0))
+            return false;*/
 
-        TabValues[lig, col] = value;
+        TabValues![lig, col] = value;
 
         return true;
     }
 
     public int? GetValue(int lig, int col)
     {
-        return TabValues[lig, col];
+        return TabValues![lig, col];
     }
 
     public int?[]? GetIndices(int lig, int col)
@@ -76,12 +76,11 @@ public class Kakuro: ICloneable
 
     public bool Contains(int value)
     {
-        return TabValues.Cast<int?>().Any(v => v == value);
+        return TabValues!.Cast<int?>().Any(v => v == value);
     }
 
     public bool IsValid()
     {
-        //todo: condition de victoire.
         return ValuesOfInvalidIndices() == 0;
     }
 
@@ -158,9 +157,9 @@ public class Kakuro: ICloneable
         return nb;
     }
 
-    public List<GetIndiceStruct> GetIndiceOfValue(int lig, int col)
+    public GetIndiceStruct[] GetIndiceOfValue(int lig, int col)
     {
-        var list = new List<GetIndiceStruct>();
+        var list = new GetIndiceStruct[2];
         
         if (GetValue(lig, col) is null)
             return list;
@@ -169,7 +168,7 @@ public class Kakuro: ICloneable
         {
             if (GetIndices(i, col) is not null)
             {
-                list.Add(new GetIndiceStruct{ col = col, lig = i, indice = GetIndices(i, col)});
+                list[0] = new GetIndiceStruct{ col = col, lig = i, indice = GetIndices(i, col)};
                 break;
             }
         }
@@ -178,7 +177,7 @@ public class Kakuro: ICloneable
         {
             if (GetIndices(lig, i) is not null)
             {
-                list.Add(new GetIndiceStruct {col = i, lig = lig, indice = GetIndices(lig, i)});
+                list[1] = new GetIndiceStruct {col = i, lig = lig, indice = GetIndices(lig, i)};
                 break;
             }
         }
@@ -192,24 +191,18 @@ public class Kakuro: ICloneable
 
         if (indice == null)
             return null;
+        
+        lig = isForLig ? lig : lig + 1;
+        col = isForLig ? col + 1 : col;
 
         int nb = 0;
-
-        do
+        while (lig < NbLig && col < NbCol && GetValue(lig, col) != null)
         {
+            nb++;
+            
             lig = isForLig ? lig : lig + 1;
             col = isForLig ? col + 1 : col;
-            
-            if(lig >= NbLig || col >= NbCol)
-                break;
-            
-            var value = GetValue(lig, col);
-
-            if (value != null)
-                nb++;
-            else
-                break;
-        } while (true);
+        }
 
         return nb;
     }
@@ -241,7 +234,18 @@ public class Kakuro: ICloneable
     [SuppressMessage("ReSharper.DPA", "DPA0001: Memory allocation issues")]
     public int Count0Value()
     {
-        return TabValues.Cast<int?>().Count(v => v == 0);
+        var nb = 0;
+
+        for (int i = 0; i < NbLig; i++)
+        {
+            for (int j = 0; j < NbCol; j++)
+            {
+                if (TabValues?[i, j] == 0)
+                    nb++;
+            }
+        }
+        
+        return nb;
     }
 
     [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH", MessageId = "type: System.Nullable`1[System.Int32][][,]")]

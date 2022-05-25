@@ -124,30 +124,28 @@ do
     for (int i = 0; i < exemples.Length; i++)
     {
         var tabExemple = exemples[i] as object[];
-        Console.WriteLine($"{i} = {tabExemple[0]}");
+        Console.WriteLine($"{i} = {tabExemple![0]}");
     }
 
     Console.Write("exemple séléctionné: ");
     try
     {
-        index = int.Parse(Console.ReadLine());
+        index = int.Parse(Console.ReadLine()!);
     }
-    catch (Exception e)
+    catch (Exception)
     {
         Console.WriteLine("Valeur invalide, recommencez\n");
     }
 } while (index < 0 || index >= exemples.Length);
 
-var tabIndices = (exemples[index] as object[])[1] as int?[]?[,];
-var tabValue = (exemples[index] as object[])[2] as int?[,];
+var tabIndices = ((exemples[index] as object[])![1] as int?[]?[,])!;
+var tabValue = ((exemples[index] as object[])![2] as int?[,])!;
 
 var kakuro = new Kakuro(tabIndices.GetLength(0), tabIndices.GetLength(1));
 
-kakuro.Initialize(tabIndices, tabValue);
+kakuro.Initialize(tabIndices!, tabValue);
 
 Console.WriteLine(kakuro);
-
-var rand = new Random();
 
 var start = DateTime.Now;
 
