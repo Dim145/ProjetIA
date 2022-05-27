@@ -107,28 +107,32 @@ public static class Algo
     [SuppressMessage("ReSharper.DPA", "DPA0001: Memory allocation issues")]
     public static Kakuro RecuitKakuro(Kakuro kakuro)
     {
+        var step = 0;
+        
         return Recuit(kakuro,
   (kakuro1, f, arg3) =>
             {
+                step++;
                 return !kakuro1.Contains(0) && kakuro1.IsValid();
             },
             oldK =>
             {
-                var newK = (oldK.Clone() as Kakuro)!;
+                int rLig;
+                int rCol;
 
-                var rLig = random.Next(0, newK.NbLig);
-                var rCol = random.Next(0, newK.NbCol);
-
-                var tmpValue = newK.GetValue(rLig, rCol);
-                while ( tmpValue is null || newK.Count0Value() > 0 && tmpValue != 0 )
+                int? tmpValue;
+                do
                 {
-                    rLig = random.Next(0, newK.NbLig);
-                    rCol = random.Next(0, newK.NbCol);
-                    
-                    tmpValue = newK.GetValue(rLig, rCol);
-                }
+                    rLig = random.Next(0, oldK.NbLig);
+                    rCol = random.Next(0, oldK.NbCol);
 
-                var indices = newK.GetIndiceOfValue(rLig, rCol);
+                    tmpValue = oldK.GetValue(rLig, rCol);
+                } while (tmpValue is null);
+
+                var indices = oldK.GetIndiceOfValue(rLig, rCol);
+                
+                var newK = oldK.PseudoClone();
+
                 var indiceLig = indices[1];
                 
                 var decompositionLig = DecompositionPlusRandom(indiceLig.indice![1]!.Value, newK.GetTabLengthForIndice(indiceLig.lig, indiceLig.col, true)!.Value);
@@ -140,11 +144,9 @@ public static class Algo
 
                 for (int i = 0; i < decompositionLig.Length; i++)
                 {
-                    int[] decompositionCol;
-
                     var numLigLock = rLig - indiceCol.lig - 1;
 
-                    decompositionCol = Algo.DecompositionPlusRandom(
+                    var decompositionCol = DecompositionPlusRandom(
                         indiceCol.indice![0]!.Value, 
                         newK.GetTabLengthForIndice(indiceCol.lig, indiceCol.col, false)!.Value
                     );
@@ -164,10 +166,10 @@ public static class Algo
             kakuro1 => kakuro1.Count0Value() + kakuro1.ValuesOfInvalidIndices(),
             (diff, f) =>
             {
-                if (diff > 0)
+                if (diff > 0) // nouveau - ancien = 12 - 13 = -1
                 {
                     var a = (float) Math.Exp( -diff/f );
-                    if( random.NextDouble() >= a ) 
+                    if( a <= 0 || random.NextDouble() >= a ) 
                     {
                         return false;
                     }
@@ -177,9 +179,12 @@ public static class Algo
             },
             decroissance: f =>
             {
+                if (f <= 0.1f)
+                    return 0.1f;
+                
                 var value = f - (f / Tinit) * 2;
 
-                return value <= 0.0005f ? 0 : value;
+                return value;
             });
     }
 }

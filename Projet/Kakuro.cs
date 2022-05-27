@@ -48,9 +48,6 @@ public class Kakuro: ICloneable
 
     public bool SetValue(int lig, int col, int value)
     {
-        if (value is 0 || GetValue(lig, col) is null)
-            return false;
-
         /*if (GetIndiceOfValue(lig, col).All(i => IsValidIndice(i.lig, i.col) == 0))
             return false;*/
 
@@ -69,14 +66,25 @@ public class Kakuro: ICloneable
         return TabIndices[lig, col];
     }
 
-    public object Get(int lig, int col)
+    public object? Get(int lig, int col)
     {
         return GetValue(lig, col) as object ?? GetIndices(lig, col);
     }
 
     public bool Contains(int value)
     {
-        return TabValues!.Cast<int?>().Any(v => v == value);
+        //return TabValues!.Cast<int?>().Any(v => v == value);
+        
+        for (var i = 0; i < NbLig; i++)
+        {
+            for (var j = 0; j < NbCol; j++)
+            {
+                if (GetValue(i, j) == value)
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     public bool IsValid()
@@ -84,15 +92,15 @@ public class Kakuro: ICloneable
         return ValuesOfInvalidIndices() == 0;
     }
 
-    public int ValuesOfInvalidIndices()
+    public float ValuesOfInvalidIndices()
     {
-        int nbInvalid = 0;
+        float nbInvalid = 0;
         
         for (int i = 0; i < NbLig; i++)
         {
             for (int j = 0; j < NbCol; j++)
             {
-                nbInvalid += IsValidIndice(i, j) ?? 0;
+                nbInvalid += IsValidIndice(i, j);
             }
         }
 
@@ -104,54 +112,49 @@ public class Kakuro: ICloneable
         public int lig {get; set;}
         public int col {get; set;}
         public int?[]? indice {get; set;}
+
+        public override string ToString()
+        {
+            return $"{lig}:{col} = {indice?[0]}\\{indice?[1]}";
+        }
     }
 
-    public int? IsValidIndice(int lig, int col)
+    public float IsValidIndice(int lig, int col)
     {
         var indice = GetIndices(lig, col);
+
+        float nb = 0;
         
-        if (indice is null) return null;
-        
-        int nb = 0;
-        
-        if (indice[0] is not null)
+        if (indice?[0] is not null)
         {
             var totalCol = 0;
 
-            int max = 1;
             for (int k = lig+1; k < NbLig; k++)
             {
                 if(GetIndices(k, col) is not null)
                     break;
 
-                if (k < max)
-                    max = k;
-
                 totalCol += GetValue(k, col) ?? 0;
             }
 
             if (totalCol != indice[0])
-                nb += max;
+                nb += 1 + Math.Abs(indice[0] ?? 0 - totalCol)/100f;
         }
 
-        if (indice[1] is not null)
+        if (indice?[1] is not null)
         {
             var totalLig = 0;
-
-            int max = 1;
+            
             for (int k = col+1; k < NbCol; k++)
             {
                 if(GetIndices(lig, k) is not null)
                     break;
 
-                if (k < max)
-                    max = k;
-
                 totalLig += GetValue(lig, k) ?? 0;
             }
 
             if (totalLig != indice[1])
-                nb += max;
+                nb += 1 + Math.Abs(indice[1] ?? 0 - totalLig)/100f;
         }
 
         return nb;
@@ -160,9 +163,6 @@ public class Kakuro: ICloneable
     public GetIndiceStruct[] GetIndiceOfValue(int lig, int col)
     {
         var list = new GetIndiceStruct[2];
-        
-        if (GetValue(lig, col) is null)
-            return list;
 
         for (int i = lig; i >= 0; i--)
         {
@@ -187,11 +187,6 @@ public class Kakuro: ICloneable
 
     public int? GetTabLengthForIndice(int lig, int col, bool isForLig)
     {
-        var indice = GetIndices(lig, col);
-
-        if (indice == null)
-            return null;
-        
         lig = isForLig ? lig : lig + 1;
         col = isForLig ? col + 1 : col;
 
@@ -236,9 +231,9 @@ public class Kakuro: ICloneable
     {
         var nb = 0;
 
-        for (int i = 0; i < NbLig; i++)
+        for (var i = 0; i < NbLig; i++)
         {
-            for (int j = 0; j < NbCol; j++)
+            for (var j = 0; j < NbCol; j++)
             {
                 if (TabValues?[i, j] == 0)
                     nb++;
@@ -249,12 +244,19 @@ public class Kakuro: ICloneable
     }
 
     [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH", MessageId = "type: System.Nullable`1[System.Int32][][,]")]
-    public object Clone()
+    public Kakuro PseudoClone()
     {
-        var newK = new Kakuro(TabIndices)
+        return new Kakuro(TabIndices)
         {
             TabValues = (TabValues.Clone() as int?[,])!
         };
+    }
+
+    public object Clone()
+    {
+        var newK = new Kakuro(NbLig, NbCol);
+        
+        newK.Initialize(TabIndices, TabValues);
 
         return newK;
     }

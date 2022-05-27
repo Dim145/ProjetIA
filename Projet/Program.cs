@@ -79,6 +79,40 @@ var exemples = new object[]
     },
     new object[]
     {
+        "12x12: niveau hard du site", //#H23341
+        new[,]
+        {
+            {null, null, new int?[]{25, null}, new int?[]{4, null}, null, new int?[]{16, null}, new int?[]{17, null}, new int?[]{22, null}, new int?[]{37, null}, new int?[]{10, null}, new int?[]{29, null}, null},
+            {null, new int?[]{null, 5}, null, null, new int?[]{12, 37}, null, null, null, null, null, null, null},
+            {null, new int?[]{21, 45}, null, null, null, null, null, null, null, null, null, new int?[]{9, null}},
+            {new int?[]{null, 6}, null, null, new int?[]{null, 14}, null, null, new int?[]{null, 35}, null, null, null, null, null},
+            {new int?[]{null, 13}, null, null, new int?[]{8, 3}, null, null, new int?[]{23, 8}, null, null, new int?[]{22, 3}, null, null},
+            {new int?[]{null, 16}, null, null, null, new int?[]{37, null}, new int?[]{35, 31}, null, null, null, null, null, null},
+            {null, new int?[]{10, null}, new int?[]{30, 28}, null, null, null, null, null, null, null, new int?[]{31, null}, new int?[]{10, null}},
+            {new int?[]{null, 37}, null, null, null, null, null, null, new int?[]{14, null}, new int?[]{18, 12}, null, null, null},
+            {new int?[]{null, 11}, null, null, new int?[]{9, 5}, null, null, new int?[]{null, 16}, null, null, new int?[]{null, 16}, null, null},
+            {new int?[]{null, 35}, null, null, null, null, null, new int?[]{11, 7}, null, null, new int?[]{9, 5}, null, null},
+            {null, new int?[]{null, 45}, null, null, null, null, null, null, null, null, null, null},
+            {null, new int?[]{null, 24}, null, null, null, null, null, null, new int?[]{null, 12}, null, null, null}
+        },
+        new int?[,]
+        {
+            {null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, 0, 0, null, 0, 0, 0, 0, 0, 0, null},
+            {null, null, 0, 0, 0, 0, 0, 0, 0, 0, 0, null},
+            {null, 0, 0, null, 0, 0, null, 0, 0, 0, 0, 0},
+            {null, 0, 0, null, 0, 0, null, 0, 0, null, 0, 0},
+            {null, 0, 0, 0, null, null, 0, 0, 0, 0, 0, 0},
+            {null, null, null, 0, 0, 0, 0, 0, 0, 0, null, null},
+            {null, 0, 0, 0, 0, 0, 0, null, null, 0, 0, 0},
+            {null, 0, 0, null, 0, 0, null, 0, 0, null, 0, 0},
+            {null, 0, 0, 0, 0, 0, null, 0, 0, null, 0, 0},
+            {null, null, 0, 0, 0, 0, 0, 0, 0, 0, 0, null},
+            {null, null, 0, 0, 0, 0, 0, 0, null, 0, 0, null}
+        }
+    },
+    new object[]
+    {
         "14x14: niveau hard du site", // #H13162
         new[,]
         {
