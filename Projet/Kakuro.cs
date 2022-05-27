@@ -138,7 +138,7 @@ public class Kakuro: ICloneable
             }
 
             if (totalCol != indice[0])
-                nb += 1 + Math.Abs(indice[0] ?? 0 - totalCol)/100f;
+                nb += 1 + Math.Abs(indice[0]!.Value - totalCol)/1000f;
         }
 
         if (indice?[1] is not null)
@@ -154,7 +154,7 @@ public class Kakuro: ICloneable
             }
 
             if (totalLig != indice[1])
-                nb += 1 + Math.Abs(indice[1] ?? 0 - totalLig)/100f;
+                nb += 1 + Math.Abs(indice[1]!.Value - totalLig)/1000f;
         }
 
         return nb;

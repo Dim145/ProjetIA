@@ -112,7 +112,14 @@ public static class Algo
         return Recuit(kakuro,
   (kakuro1, f, arg3) =>
             {
+                if (f < 0.0001f && step > 750*(kakuro1.NbLig))
+                {
+                    Console.WriteLine($"Fin avant d'avoir trouvé de solution. ({kakuro1.ValuesOfInvalidIndices()})");
+                    return true;
+                }
+                
                 step++;
+                //Console.WriteLine(kakuro1.ValuesOfInvalidIndices());
                 return !kakuro1.Contains(0) && kakuro1.IsValid();
             },
             oldK =>
@@ -179,9 +186,6 @@ public static class Algo
             },
             decroissance: f =>
             {
-                if (f <= 0.1f)
-                    return 0.1f;
-                
                 var value = f - (f / Tinit) * 2;
 
                 return value;
