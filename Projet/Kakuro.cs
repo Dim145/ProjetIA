@@ -131,10 +131,12 @@ public class Kakuro: ICloneable
 
             for (int k = lig+1; k < NbLig; k++)
             {
-                if(GetIndices(k, col) is not null)
+                var tmp = GetValue(k, col);
+                
+                if(tmp is null)
                     break;
 
-                totalCol += GetValue(k, col) ?? 0;
+                totalCol += tmp.Value;
             }
 
             if (totalCol != indice[0])
@@ -147,10 +149,12 @@ public class Kakuro: ICloneable
             
             for (int k = col+1; k < NbCol; k++)
             {
-                if(GetIndices(lig, k) is not null)
+                var tmp = GetValue(lig, k);
+                
+                if(tmp is null)
                     break;
 
-                totalLig += GetValue(lig, k) ?? 0;
+                totalLig += tmp.Value;
             }
 
             if (totalLig != indice[1])
@@ -166,18 +170,21 @@ public class Kakuro: ICloneable
 
         for (int i = lig; i >= 0; i--)
         {
-            if (GetIndices(i, col) is not null)
+            var tmp = GetIndices(i, col);
+            
+            if (tmp is not null)
             {
-                list[0] = new GetIndiceStruct{ col = col, lig = i, indice = GetIndices(i, col)};
+                list[0] = new GetIndiceStruct{ col = col, lig = i, indice = tmp};
                 break;
             }
         }
         
         for (int i = col; i >= 0; i--)
         {
-            if (GetIndices(lig, i) is not null)
+            var tmp = GetIndices(lig, i);
+            if (tmp is not null)
             {
-                list[1] = new GetIndiceStruct {col = i, lig = lig, indice = GetIndices(lig, i)};
+                list[1] = new GetIndiceStruct {col = i, lig = lig, indice = tmp};
                 break;
             }
         }
@@ -220,6 +227,7 @@ public class Kakuro: ICloneable
                 sRet += tabCase switch
                 {
                     int val => $"|  {val}  |",
+                    //int?[] indices => $"|{(addColor ? IsValidIndice(i, j) is > 5f and < 10f or > 15f ? "R" : "W" : "")}{(indices[0] is null ? " □" : $"{indices[0]:D2}")}{(addColor ? "W" : "")}\\{(addColor ? IsValidIndice(i, j) > 10f ? "R" : "W" : "")}{(indices[1] is null ? "□ " : $"{indices[1]:D2}")}{(addColor ? "W" : "")}|",
                     int?[] indices => $"{(addColor ? IsValidIndice(i, j) == 0 ? "W" : "R" : "")}|{(indices[0] is null ? " □" : $"{indices[0]:D2}")}\\{(indices[1] is null ? "□ " : $"{indices[1]:D2}")}|{(addColor ? "W" : "")}",
                     _ => "|  □  |"
                 };
