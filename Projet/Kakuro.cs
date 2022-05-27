@@ -138,7 +138,7 @@ public class Kakuro: ICloneable
             }
 
             if (totalCol != indice[0])
-                nb += 1 + Math.Abs(indice[0]!.Value - totalCol)/1000f;
+                nb += 5f + Math.Abs(indice[0]!.Value - totalCol)/100f;
         }
 
         if (indice?[1] is not null)
@@ -154,7 +154,7 @@ public class Kakuro: ICloneable
             }
 
             if (totalLig != indice[1])
-                nb += 1 + Math.Abs(indice[1]!.Value - totalLig)/1000f;
+                nb += 5f + Math.Abs(indice[1]!.Value - totalLig)/100f;
         }
 
         return nb;
@@ -204,6 +204,11 @@ public class Kakuro: ICloneable
 
     public override string ToString()
     {
+        return ToString(false);
+    }
+
+    public string ToString(bool addColor)
+    {
         var sRet = string.Empty;
 
         for (int i = 0; i < NbLig; i++)
@@ -215,7 +220,7 @@ public class Kakuro: ICloneable
                 sRet += tabCase switch
                 {
                     int val => $"|  {val}  |",
-                    int?[] indices => $"|{(indices[0] is null ? " □" : $"{indices[0]:D2}")}\\{(indices[1] is null ? "□ " : $"{indices[1]:D2}")}|",
+                    int?[] indices => $"{(addColor ? IsValidIndice(i, j) == 0 ? "W" : "R" : "")}|{(indices[0] is null ? " □" : $"{indices[0]:D2}")}\\{(indices[1] is null ? "□ " : $"{indices[1]:D2}")}|{(addColor ? "W" : "")}",
                     _ => "|  □  |"
                 };
             }
@@ -224,6 +229,23 @@ public class Kakuro: ICloneable
         }
 
         return sRet;
+    }
+
+    public void PrintColorKakuro()
+    {
+        string str = this.ToString(true);
+
+        foreach (var c in str)
+        {
+            if (c == 'W')
+                Console.ForegroundColor = ConsoleColor.White;
+            else if (c == 'R')
+                Console.ForegroundColor = ConsoleColor.Red;
+            else
+                Console.Write(c);
+        }
+
+        Console.ForegroundColor = ConsoleColor.White;
     }
 
     [SuppressMessage("ReSharper.DPA", "DPA0001: Memory allocation issues")]

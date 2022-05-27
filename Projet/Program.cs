@@ -179,7 +179,7 @@ var kakuro = new Kakuro(tabIndices.GetLength(0), tabIndices.GetLength(1));
 
 kakuro.Initialize(tabIndices!, tabValue);
 
-Console.WriteLine(kakuro);
+kakuro.PrintColorKakuro();
 
 var start = DateTime.Now;
 
@@ -187,5 +187,5 @@ var resolvedKakuro = Algo.RecuitKakuro(kakuro);
 
 var end = DateTime.Now;
 
-Console.WriteLine(resolvedKakuro);
+resolvedKakuro.PrintColorKakuro();
 Console.WriteLine("temps: " + ((end - start).Ticks / TimeSpan.TicksPerMillisecond) + "ms");
